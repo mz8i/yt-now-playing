@@ -1,5 +1,9 @@
 function getCurrentVideoId(window) {
-  return window.location.href.match(/\/watch\?v=([0-9a-zA-Z]+)/)[1];
+  const videoIdMatch = window.location.href.match(/\/watch\?v=([0-9a-zA-Z]+)/);
+  if(videoIdMatch == null) {
+    return null;
+  }
+  return videoIdMatch[1];
 }
 
 function getCurrentVideoInfo(window) {
