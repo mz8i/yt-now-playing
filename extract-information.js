@@ -34,29 +34,30 @@ const informationRegexes = [
 function tryAddition(state, regexFunctions, direction) {
     if (state.rows.length === 0) return false;
 
-    let rowRemainders = state.rows.map(
-        r => r.match(new RegExp(state.regexString))[state.freeFormGroupIndex]
-    );
-
     for (const fn of regexFunctions) {
-        const addition = fn(rowRemainders, direction);
+        const addition = fn(state.rowRemainders, direction);
 
-        let tempRegexString;
+        let titleRegexReplacement;
         if (direction === -1) {
-            tempRegexString = state.regexString.replace(TITLE_REGEX, addition + TITLE_REGEX);
+            titleRegexReplacement = addition + TITLE_REGEX;
         } else if (direction === 1) {
-            tempRegexString = state.regexString.replace(TITLE_REGEX, TITLE_REGEX + addition);
+            titleRegexReplacement = TITLE_REGEX + addition;
         }
 
-        const regExp = new RegExp(tempRegexString);
-        const matches = state.rows.map(r => r.match(regExp));
+        const regExp = new RegExp('^' + titleRegexReplacement + '$');
+        const matches = state.rowRemainders.map(r => r.match(regExp));
 
         if (matches.every(x => !!x)) {
 
-            state.regexString = tempRegexString;
+            state.regexString = state.regexString.replace(TITLE_REGEX, titleRegexReplacement);
+
             if (isGrouppedRegexString(addition) && direction === -1) {
                 state.freeFormGroupIndex += 1;
             }
+
+            state.rowRemainders = state.rows.map(
+                r => r.match(new RegExp(state.regexString))[state.freeFormGroupIndex]
+            );
 
             return true;
         }
@@ -72,6 +73,7 @@ function buildRegex(rows) {
     const initialRegex = '^' + TITLE_REGEX + '$';
     const parsingState = {
         rows: rows.slice(0),
+        rowRemainders: rows.slice(0),
         regexString: initialRegex,
         freeFormGroupIndex: 1
     };
