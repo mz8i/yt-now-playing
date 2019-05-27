@@ -41,6 +41,7 @@ function getNowPlaying(time, tracklist) {
 const updateCompleteDebounceMillis = 1000;
 
 const player = document.getElementById("movie_player");
+
 const state = {
   currentVideoInfo: null,
   isInfoChanging: false,
@@ -48,8 +49,13 @@ const state = {
   candidates: null, 
   tracklist: null,
   currentlyPlaying: -1,
-  video: player.getElementsByTagName("video")[0]
+  video: player.getElementsByTagName("video")[0],
+  ads: player.getElementsByClassName('video-ads')[0]
 };
+
+function isAdvertisement(state) {
+  return state.ads != null && state.ads.offsetParent !== null;
+}
 
 function clearNowPlayingInfo(state) {
   state.currentlyPlaying = -1;
@@ -97,7 +103,7 @@ function loopFn() {
     updateTracklist(state, document);
   }
   
-  if(state.tracklist) {
+  if(state.tracklist && !isAdvertisement(state)) {
     updateNowPlayingInfo(state)
   }
   
