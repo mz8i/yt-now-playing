@@ -1,0 +1,29 @@
+{
+
+  "manifest_version": 2,
+  "name": "YT Album Player",
+  "version": "1.0",
+
+  "description": "Shows song now playing in album videos on YouTube, based on track listing in video description",
+
+  "icons": {
+    "48": "icons/play.png"
+  },
+
+  "background": {
+    "scripts": [
+      "background-script.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/watch*"],
+      "js": ["lodash.min.js", "extract-information.js", "tracklist-candidates.js", "content-script.js"]
+    }
+  ],
+
+  "permissions": [
+    "notifications"
+  ]
+
+}
