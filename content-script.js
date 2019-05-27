@@ -48,7 +48,7 @@ const state = {
 };
 
 function clearNowPlayingInfo(state) {
-  state.nowPlaying = -1;
+  state.currentlyPlaying = -1;
   state.tracklist = null
 }
 
