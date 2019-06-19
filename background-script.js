@@ -14,7 +14,7 @@ function notifyNowPlaying(msg) {
     nowPlayingId, {
       type: 'basic',
       title: 'Now playing',
-      iconUrl: browser.extension.getURL('/icons/play.png'),
+      iconUrl: chrome.runtime.getURL('/icons/play.png'),
       message: msg.name
       // buttons: nowPlayingButtons
     }
