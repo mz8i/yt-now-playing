@@ -24,12 +24,11 @@ const regexFunctions = [
     }
 ];
 
-const informationRegexes = [
-    [new RegExp(TIME_REGEX), 'timeString'],
-    [new RegExp(NUMBER_REGEX), 'number'],
-    [new RegExp(TITLE_REGEX), 'title']
+const informationRegexStrings = [
+    { name: 'timeString', regexString: TIME_REGEX },
+    { name: 'number', regexString: NUMBER_REGEX },
+    { name: 'title', regexString: TITLE_REGEX }
 ];
-
 
 function tryAddition(state, regexFunctions, direction) {
     if (state.rows.length === 0) return false;
@@ -67,7 +66,7 @@ function tryAddition(state, regexFunctions, direction) {
     return false;
 }
 
-function buildRegex(rows) {
+function buildRegex(rows, regexFunctions) {
     if (!rows || rows.length === 0) return null;
 
     const initialRegex = '^' + TITLE_REGEX + '$';
@@ -102,10 +101,13 @@ function parseTime(timeString) {
 
 function extractTrackDetails(match, informationRegexes) {
     const details = match.slice(1) // get rid of full match
-        .map(m => [m, informationRegexes.find(ir => m.match(ir[0]))])
-        .filter(x => x[1] !== undefined)
+        .map(m => ({
+            group: m,
+            matchedRegex: informationRegexes.find(ir => m.match(ir.regex))
+        }))
+        .filter(x => x.matchedRegex != undefined)
         .reduce((result, entry) => {
-            result[entry[1][1]] = entry[0];
+            result[entry.matchedRegex.name] = entry.group;
             return result;
         }, {});
 
@@ -114,8 +116,12 @@ function extractTrackDetails(match, informationRegexes) {
     return details;
 }
 
-function extractTracklist(rows, regexString) {
+function extractTracklist(rows, regexString, informationRegexStrings) {
     const regex = new RegExp(regexString);
+    const informationRegexes = informationRegexStrings.map(x => ({
+        name: x.name,
+        regex: new RegExp(`^${x.regexString}$`)
+    }));
     return rows.map(r => r.match(regex))
         .map(m => extractTrackDetails(m, informationRegexes));
 }
@@ -129,12 +135,12 @@ function parseTracklist(description) {
 
     if (!rows) return null;
 
-    const regexString = buildRegex(rows);
+    const regexString = buildRegex(rows, regexFunctions);
 
     if (regexString === null) {
         return null;
     } else {
-        return extractTracklist(rows, regexString);
+        return extractTracklist(rows, regexString, informationRegexStrings);
     }
 }
 
