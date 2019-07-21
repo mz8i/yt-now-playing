@@ -30,18 +30,22 @@ const informationRegexStrings = [
     { name: 'title', regexString: TITLE_REGEX }
 ];
 
+
+function getTitleRegexReplacement(addition, direction) {
+    if (direction === -1) {
+        return addition + TITLE_REGEX;
+    } else if (direction === 1) {
+        return TITLE_REGEX + addition;
+    }
+}
+
 function tryAddition(state, regexFunctions, direction) {
     if (state.rows.length === 0) return false;
 
     for (const fn of regexFunctions) {
         const addition = fn(state.rowRemainders, direction);
 
-        let titleRegexReplacement;
-        if (direction === -1) {
-            titleRegexReplacement = addition + TITLE_REGEX;
-        } else if (direction === 1) {
-            titleRegexReplacement = TITLE_REGEX + addition;
-        }
+        let titleRegexReplacement = getTitleRegexReplacement(addition, direction);
 
         const regExp = new RegExp('^' + titleRegexReplacement + '$');
         const matches = state.rowRemainders.map(r => r.match(regExp));
@@ -126,28 +130,28 @@ function extractTracklist(rows, regexString, informationRegexStrings) {
         .map(m => extractTrackDetails(m, informationRegexes));
 }
 
+function getRowsFromDescription(description) {
+    return description.split('\n')
+        .map(r => r.trim())
+        .filter(x => x.match(new RegExp(TIME_REGEX)));
+}
+
 function parseTracklist(description) {
     if (!description) return null;
 
-    const rows = description.split('\n')
-        .map(r => r.trim())
-        .filter(x => x.match(new RegExp(TIME_REGEX)));
+    const rows = getRowsFromDescription(description);
 
-    if (!rows) return null;
+    if (rows.length === 0) return null;
 
     const regexString = buildRegex(rows, regexFunctions);
 
-    if (regexString === null) {
-        return null;
-    } else {
-        return extractTracklist(rows, regexString, informationRegexStrings);
-    }
+    return regexString && extractTracklist(rows, regexString, informationRegexStrings);
 }
 
 function getTrackList(candidates) {
+    if (!candidates) return null;
+    
     let tracklist = null;
-    if (!candidates) return tracklist;
-
     for (const candidate of candidates) {
         tracklist = parseTracklist(candidate);
         if (tracklist) break;
