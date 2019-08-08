@@ -4,10 +4,10 @@
   "name": "YT Album Player",
   "version": "1.0",
 
-  "description": "Shows song now playing in album videos on YouTube, based on track listing in video description",
+  "description": "Display a notification when a new song in a YouTube full album video starts playing. No more trawling through track lists in video description and comments!",
 
   "icons": {
-    "48": "icons/play.png"
+    "128": "icons/play128.png"
   },
 
   "background": {
@@ -23,7 +23,8 @@
   ],
 
   "permissions": [
-    "notifications"
+    "notifications",
+    "storage"
   ],
 
   "web_accessible_resources": [

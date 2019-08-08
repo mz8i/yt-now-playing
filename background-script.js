@@ -41,10 +41,10 @@ function toggleDisplayNotifications() {
 function updateBrowserAction() {
   let path, title;
   if (displayNotifications) {
-    path = 'icons/play.png';
+    path = 'icons/play48.png';
     title = 'YT Album Player: On';
   } else {
-    path = 'icons/play-inactive.png';
+    path = 'icons/play-inactive48.png';
     title = 'YT Album Player: Off';
   }
 
