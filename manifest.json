@@ -24,6 +24,16 @@
 
   "permissions": [
     "notifications"
-  ]
+  ],
+
+  "web_accessible_resources": [
+    "icons/*.png"
+  ],
+
+  "browser_action": {
+    "default_icon": {
+      "48": "icons/play.png"
+    }
+  }
 
 }

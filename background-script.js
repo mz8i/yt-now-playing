@@ -9,7 +9,11 @@
 
 let nowPlayingId = 'nowplaying-notification';
 
+let displayNotifications = true;
+
 function notifyNowPlaying(msg) {
+  if (!displayNotifications) return;
+
   chrome.notifications.create(
     nowPlayingId, {
       type: 'basic',
@@ -29,7 +33,29 @@ function notifyNowPlaying(msg) {
 //   if(notificationId == )
 // }
 
+function toggleDisplayNotifications() {
+  displayNotifications = !displayNotifications;
+  updateBrowserAction();
+}
+
+function updateBrowserAction() {
+  let path, title;
+  if (displayNotifications) {
+    path = 'icons/play.png';
+    title = 'YT Album Player: On';
+  } else {
+    path = 'icons/play-inactive.png';
+    title = 'YT Album Player: Off';
+  }
+
+  chrome.browserAction.setIcon({ path });
+  chrome.browserAction.setTitle({ title });
+}
 
 
 chrome.runtime.onMessage.addListener(notifyNowPlaying);
 // browser.notifications.onButtonClicked.addListener();
+
+chrome.browserAction.onClicked.addListener(toggleDisplayNotifications);
+
+updateBrowserAction();
