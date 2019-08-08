@@ -59,7 +59,7 @@ function clearNowPlayingInfo(state) {
 
 function updateTracklist(state, document) {
   state.candidates = getTracklistCandidates(document, isTracklistCandidate);
-  console.log('candidates', state.candidates);
+  console.log(state.candidates);
   state.tracklist = getTrackList(state.candidates);
   console.log(state.tracklist);
 }
