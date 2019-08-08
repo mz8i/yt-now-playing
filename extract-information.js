@@ -159,3 +159,9 @@ function getTrackList(candidates) {
 
     return tracklist;
 }
+
+function isTracklistCandidate(text) {
+    const rows = getRowsFromDescription(text);
+    if(!rows) return false;
+    return rows.length > 1;
+}

@@ -9,7 +9,8 @@ function getCurrentVideoId(window) {
 function getCurrentVideoInfo(window) {
   return {
     videoId: getCurrentVideoId(window),
-    videoDescription: getDescription(window.document)
+    videoDescription: getDescription(window.document, isTracklistCandidate),
+    videoComments: getTopTracklistComments(window.document, isTracklistCandidate)
   };
 }
 
@@ -57,8 +58,8 @@ function clearNowPlayingInfo(state) {
 }
 
 function updateTracklist(state, document) {
-  state.candidates = getTracklistCandidates(document);
-  console.log(state.candidates);
+  state.candidates = getTracklistCandidates(document, isTracklistCandidate);
+  console.log('candidates', state.candidates);
   state.tracklist = getTrackList(state.candidates);
   console.log(state.tracklist);
 }
